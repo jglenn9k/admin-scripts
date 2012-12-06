@@ -1,23 +1,26 @@
-#!/usr/bin/python2
-# Must use Python 2.
-# Import list of servers and services from Icinga and make pages for the Wiki.
-# Will overwrite existing pages.
+#!/usr/bin/env python
+# Must use Python 2.x
+"""Import list of servers and services from Icinga and make pages for the Wiki.
+It will overwrite existing pages."""
 
 import json
 import urllib2
-import mwclient # See http://sourceforge.net/apps/mediawiki/mwclient/index.php?title=Main_Page
+# See http://sourceforge.net/apps/mediawiki/mwclient/index.php?title=Main_Page
+import mwclient
 
 # Edit these
 wikiusername = "admin"
 wikipassword = "admin123"
 icingausername = "admin"
 icingapassword = "admin123"
-icingaurl = "https://icinga.example.com/cgi-bin/icinga/status.cgi" # Needs to be the location of your status.cgi
+# Needs to be the location of your status.cgi
+icingaurl = "https://icinga.example.com/cgi-bin/icinga/status.cgi"
 # I'm assuming you use HTTPS. You really should.
 wikihost = ('https','en.wikipedia.org')
 
 # Config for the Wiki
-site = mwclient.Site(wikihost,path='/w/') # You might need to change the path, but this is the default.
+# You might need to change the path, but this is the default.
+site = mwclient.Site(wikihost, path='/w/')
 site.login(wikiusername, wikipassword)
 
 # This gets through the HTTP Basic Auth in Icinga
