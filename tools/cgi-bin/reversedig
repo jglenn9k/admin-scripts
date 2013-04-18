@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # read in our parameters
-IP=`echo "$QUERY_STRING" | sed -n 's/^.*ip=\([^&]*\).*$/\1/p' | sed "s/%20/ /g" | sed "s/%3A/:/g"`
+IP=`echo "$QUERY_STRING" | sed -n 's/^.*ip=\([^&]*\).*$/\1/p' | sed "s/%3A/:/g"`
 
 if [ $IP ]
 then
