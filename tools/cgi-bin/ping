@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# read in our parameters
+IP=$(echo "$QUERY_STRING" | sed -n 's/^.*ip=\([^&]*\).*$/\1/p' | sed 's/%3A/:/g')
+
+if [ $IP ]
+then
+  echo -e "Content-type: text/html\n\n<pre>"
+  if ping -c 6 $IP
+      then
+        echo -e "\n---------------------------------\n</pre>\n"
+        echo -e "<a href=\"http://tools.ablackhat.net/\">http://tools.ablackhat.net/</a>"
+      else
+        echo -e "</pre>"
+	echo -e "There was a problem. Go back to <a href=\"http://tools.ablackhat.net/\">http://tools.ablackhat.net/</a>"
+     fi
+else
+  echo -e "Location: /\n"
+fi
+

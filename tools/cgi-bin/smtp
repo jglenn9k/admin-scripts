@@ -1,0 +1,21 @@
+#!/bin/bash
+
+IP=$(echo "$QUERY_STRING" | sed -n 's/^.*ip=\([^&]*\).*$/\1/p' | sed 's/%3A/:/g')
+
+if [ $IP ]
+then
+  echo -e "Content-type: text/html\n\n<pre>"
+  # open a tcp socket for read/write
+  if nc -w 2 -zv $IP 25 2>&1
+      then
+        echo -e "\n---------------------------------\n</pre>\n"
+        echo -e "<a href=\"http://tools.ablackhat.net/\">http://tools.ablackhat.net/</a>"
+      else
+echo -e "Could not connect to $IP\n"
+        echo -e "\n---------------------------------\n</pre>\n"
+	echo -e "<br />Go back to <a href=\"http://tools.ablackhat.net/\">http://tools.ablackhat.net/</a>"
+     fi
+else
+  echo -e "Location: /\n"
+fi
+

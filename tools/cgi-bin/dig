@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# read in our parameters
+IP=$(echo "$QUERY_STRING" | sed -n 's/^.*ip=\([^&]*\).*$/\1/p' | sed 's/%3A/:/g')
+TYPE=`echo "$QUERY_STRING" | sed -n 's/^.*type=\([^&]*\).*$/\1/p' | sed "s/%20/ /g"`
+
+if [ $IP ] && [ $TYPE ]
+then
+  echo -e "Content-type: text/html\n\n<pre>"
+  if dig $IP $TYPE
+      then
+        echo -e "\n---------------------------------\n</pre>\n"
+        echo -e "<a href=\"http://tools.ablackhat.net/\">http://tools.ablackhat.net/</a>"
+      else
+        echo -e "</pre>"
+	echo -e "There was a problem. Go back to <a href=\"http://tools.ablackhat.net/\">http://tools.ablackhat.net/</a>"
+     fi
+else
+  echo -e "Location: /\n"
+fi
+
