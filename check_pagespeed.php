@@ -1,11 +1,10 @@
 #!/usr/bin/php
 <?php
-# See http://www.php.net/manual/en/function.curl-getinfo.php
-# James Glenn <thedonkdonk@gmail.com>
-# 2013-04-30
+// See http://www.php.net/manual/en/function.curl-getinfo.php
+// James Glenn <thedonkdonk@gmail.com>
+// 2013-05-08
 
-
-//include the class
+// Vague attempt at OOP
 
 class PageLoad {
 
