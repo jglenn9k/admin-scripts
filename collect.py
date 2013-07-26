@@ -126,7 +126,7 @@ if platform.system() == "Linux":
         try:
             fileage = os.path.getmtime(logfile)
             if fileage > thirtydays_ago:
-                status = "Yes
+                status = "Yes"
             else:
                 status = "No"
         except:
