@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # Must use Python 2.x
-"""Import list of servers and services from Icinga and make pages for the Wiki.
+"""Import list of servers and services from Icinga and make pages for a Wiki.
 It will overwrite existing pages."""
 
 import json
@@ -16,7 +16,7 @@ icingapassword = "admin123"
 # Needs to be the location of your status.cgi
 icingaurl = "https://icinga.example.com/cgi-bin/icinga/status.cgi"
 # I'm assuming you use HTTPS. You really should.
-wikihost = ('https','en.wikipedia.org')
+wikihost = ('https','en.example.org')
 
 # Config for the Wiki
 # You might need to change the path, but this is the default.
