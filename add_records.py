@@ -10,7 +10,7 @@ import pyrax.exceptions as exc
 
 parser = argparse.ArgumentParser(description='Add Rackspace Cloud Domain records')
 parser.add_argument('-D', '--domain', type=str, help='Domain Name', required=True)
-parser.add_argument('-t', '--type', type=str, help='Record Type', required=True)
+parser.add_argument('-t', '--type', type=str, help='Record Type', required=True, default='A')
 parser.add_argument('-r', '--record', type=str, help='Record Name', required=True)
 parser.add_argument('-d', '--data', type=str, help='Record Data', required=True)
 parser.add_argument('-p', '--priority', type=int, help='Mail Priority. Defaults to 10', required=False, default=10)
