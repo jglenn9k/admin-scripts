@@ -45,7 +45,7 @@ else:
 try:
     dom = dns.find(name=domain_name)
     recs = dom.add_records([rec])
-except:
+except DomainCreationFailed:
     dom = dns.create(name=domain_name, emailAddress="hostmaster@" + domain_name, ttl=3600)
     recs = dom.add_records([rec])
 
