@@ -13,7 +13,7 @@ parser.add_argument('-D', '--domain', type=str, help='Domain Name', required=Tru
 parser.add_argument('-t', '--type', type=str, help='Record Type', required=True)
 parser.add_argument('-r', '--record', type=str, help='Record Name', required=True)
 parser.add_argument('-d', '--data', type=str, help='Record Data', required=True)
-parser.add_argument('-p', '--priority', type=str, help='Mail Priority. Defaults to 10', required=False, default=10)
+parser.add_argument('-p', '--priority', type=int, help='Mail Priority. Defaults to 10', required=False, default=10)
 
 args = parser.parse_args()
 
