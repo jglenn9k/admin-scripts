@@ -8,7 +8,7 @@ import ssl
 from backports.ssl_match_hostname import match_hostname, CertificateError
 
 parser = argparse.ArgumentParser(description='SSL Certificate Report')
-parser.add_argument('-H', '--hostname', type=str, help='Host Name', required=Tru
+parser.add_argument('-H', '--hostname', type=str, help='Host Name', required=True)
 
 args = parser.parse_args()
 hostname = args.hostname
