@@ -14,17 +14,17 @@ args = parser.parse_args()
 hostname = args.hostname
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-ssl_sock = ssl.wrap_socket(sock, ssl_version=ssl.PROTOCOL_SSLv3, cert_reqs=ssl.C
+ssl_sock = ssl.wrap_socket(sock, ssl_version=ssl.PROTOCOL_SSLv3, cert_reqs=ssl.CERT_REQUIRED, ca_certs='/etc/pki/tls/cert.pem')
 
 try:
     ssl_sock.connect((hostname, 443))
-except ssl.SSLError:
+except ssl.SSLError, socket.error:
     print hostname + ": Port 443 not open"
     sys.exit(1)
 
 try:
     match_hostname(ssl_sock.getpeercert(), hostname)
-except ValueError:
+except ValueError, :
     print hostname + ": Certificate not valid"
     sys.exit(1)
 
@@ -49,5 +49,6 @@ def size(self):
 
 certsize = cert.get_pubkey().size()*8
 
-print "'%s', '%s', '%s', '%s', '%s'" % (hostname, ciphertype, certsize, certinfo
-
+print "'%s', '%s', '%s', '%s', '%s'" % (hostname, ciphertype, certsize, certinfo, expires)
+sock.close()
+conn.close()
