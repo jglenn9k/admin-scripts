@@ -13,37 +13,29 @@ import base64
 
 # Hard Code this. Might want to have drop down...
 # CentOS 6.4
-template = "e0ed4adb-3a00-433e-a0ac-a51f1bc1ea3d"
+template = "25a5f2e8-f522-4fe0-b0e0-dbaa62405c25"
 
 parser = argparse.ArgumentParser(description='Create new Rackspace Cloud Server')
 parser.add_argument('-n', '--name', type=str, help='Server Name', required=True)
 parser.add_argument('-s', '--size', type=int, default=2, help='Server Size', required=True)
-parser.add_argument('-c', '--client', type=str, help='Client Name', required=True)
-parser.add_argument('-j', '--jobnumber', type=str, help='Job Number', required=True)
 
 args = parser.parse_args()
 
 servername = args.name
 flavor = args.size
-client = str(args.client)
-jobnumber = str(args.jobnumber)
 
-meta = {"client": client,
-        "jobnumber": jobnumber,
-       }
 
 creds_file = os.path.expanduser("~/.rackspace_cloud_credentials")
 pyrax.settings.set('identity_type', 'rackspace')
-pyrax.settings.set('region', 'ORD')
+pyrax.settings.set('region', 'DFW')
 pyrax.set_credential_file(creds_file)
 cs = pyrax.cloudservers
 
-server = cs.servers.create(servername, template, flavor, meta=meta)
+server = cs.servers.create(servername, template, flavor)
 print "Name: ", server.name
 print "ID: ", server.id
 print "Status: ", server.status
 print "Admin Password: ", server.adminPass
-print "Data: ", server.metadata
 
 rootpassword = server.adminPass
 
