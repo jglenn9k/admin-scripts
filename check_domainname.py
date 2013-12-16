@@ -4,7 +4,7 @@
 import sys
 import argparse
 # https://pypi.python.org/pypi/pythonwhois
-import pythonwhois 
+import pythonwhois
 import datetime
 
 parser = argparse.ArgumentParser(description='Icinga check for Domain Name expiration')
@@ -26,24 +26,14 @@ try:
 except KeyError:
     print "UNKNOWN - No information for %s." % domain_name
     sys.exit(3)
-try:
-    expires = expdate
-except (TypeError, ValueError):
-    print "UNKNOWN - %s expires on: %s" % (domain_name,expdate)
-    sys.exit(3)
 
 if expires < (now + datetime.timedelta(days=crit)):
     print "CRITICAL - %s expires on: %s. Email %s to renew." % (domain_name,expdate,str(whois_info['contacts']['admin']['email']))
     sys.exit(2)
-
 elif expires < (now + datetime.timedelta(days=warn)):
     print "WARNING - %s expires on: %s. Email %s to renew." % (domain_name,expdate,str(whois_info['contacts']['admin']['email']))
     sys.exit(1)
 else:
     print "OK - %s expires on: %s." % (domain_name,expdate)
     sys.exit(0)
-
-
-
-
 
