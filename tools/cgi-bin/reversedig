@@ -1,20 +1,30 @@
 #!/bin/bash
 
-# read in our parameters
-IP=`echo "$QUERY_STRING" | sed -n 's/^.*ip=\([^&]*\).*$/\1/p' | sed "s/%3A/:/g"`
+IP=`echo "$QUERY_STRING" | sed -n 's/^.*ip=\([^&]*\).*$/\1/p' | sed "s/%20/ /g" | sed "s/%3A/:/g"`
 
 if [ $IP ]
 then
-  echo -e "Content-type: text/html\n\n<pre>"
-  if dig -x $IP
-      then
-        echo -e "\n---------------------------------\n</pre>\n"
-        echo -e "<a href=\"http://tools.ablackhat.net/\">http://tools.ablackhat.net/</a>"
-      else
-        echo -e "</pre>"
-	echo -e "There was a problem. Go back to <a href=\"http://tools.ablackhat.net/\">http://tools.ablackhat.net/</a>"
-     fi
-else
-  echo -e "Location: /\n"
-fi
+    echo -e "Content-type: text/html\n\n<!DOCTYPE html>
 
+<html>
+<head>
+
+  <title>dig -x $IP</title>
+</head>
+
+<body>
+<pre>"
+    if dig -x $IP
+    then
+        echo -e "</pre>\n"
+        echo -e "<hr />\n"
+        echo -e "<a href=\"/\">Main page</a>\n"
+        echo -e "</body>\n</html>"
+    else
+        echo -e "</pre>\n"
+        echo -e "There was a problem. Go back to the <a href=\"/\">Main page</a>.\n"
+        echo -e "</body>\n</html>"
+    fi
+    else
+        echo -e "Location: /\n"
+fi

@@ -1,10 +1,11 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 import sys
-import whois
 import argparse
+# https://pypi.python.org/pypi/pythonwhois
+import pythonwhois 
 import datetime
-import time
 
 parser = argparse.ArgumentParser(description='Icinga check for Domain Name expiration')
 parser.add_argument('-D', '--domain', type=str, help='Domain Name', required=True)
@@ -16,24 +17,33 @@ domain_name = args.domain
 warn = args.warning
 crit = args.critical
 
-whois_info = whois.whois(domain_name)
+whois_info = pythonwhois.get_whois(domain_name,normalized=True)
 
-# There has got to be a better way to do this...
 now = datetime.datetime.now()
-now = str(now)
-now = now[:-7]
 
-current_time = time.mktime(datetime.datetime.strptime(now, "%Y-%m-%d %H:%M:%S").timetuple())
+try:
+    expdate = whois_info['expiration_date'][0]
+except KeyError:
+    print "UNKNOWN - No information for %s." % domain_name
+    sys.exit(3)
+try:
+    expires = expdate
+except (TypeError, ValueError):
+    print "UNKNOWN - %s expires on: %s" % (domain_name,expdate)
+    sys.exit(3)
 
-expires = time.mktime(datetime.datetime.strptime(whois_info.expiration_date, "%Y-%m-%d %H:%M:%S").timetuple())
-
-if expires < (current_time + (86400 * crit)):
-    print "CRITICAL - Domain Expires on: " + whois_info.expiration_date
+if expires < (now + datetime.timedelta(days=crit)):
+    print "CRITICAL - %s expires on: %s. Email %s to renew." % (domain_name,expdate,str(whois_info['contacts']['admin']['email']))
     sys.exit(2)
 
-elif expires < (current_time + (86400 * warn)):
-    print "WARNING - Domain Expires on: " + whois_info.expiration_date
+elif expires < (now + datetime.timedelta(days=warn)):
+    print "WARNING - %s expires on: %s. Email %s to renew." % (domain_name,expdate,str(whois_info['contacts']['admin']['email']))
     sys.exit(1)
 else:
-    print "OK - Domain Expires on: " + whois_info.expiration_date
+    print "OK - %s expires on: %s." % (domain_name,expdate)
     sys.exit(0)
+
+
+
+
+
