@@ -13,27 +13,28 @@ parser.add_argument('-w', '--warning', type=int, help='Days to result in warning
 parser.add_argument('-c', '--critical', type=int, help='Days to result in critical status', default=7)
 
 args = parser.parse_args()
-domain_name = args.domain
-warn = args.warning
-crit = args.critical
-
-whois_info = pythonwhois.get_whois(domain_name,normalized=True)
 
 now = datetime.datetime.now()
 
 try:
-    expdate = whois_info['expiration_date'][0]
-except KeyError:
-    print "UNKNOWN - No information for %s." % domain_name
+    whois_info = pythonwhois.get_whois(args.domain,normalized=True)
+except pythonwhois.shared.WhoisException:
+    print "UNKNOWN - No root WHOIS server found for %s." % domain_name
     sys.exit(3)
 
-if expires < (now + datetime.timedelta(days=crit)):
-    print "CRITICAL - %s expires on: %s. Email %s to renew." % (domain_name,expdate,str(whois_info['contacts']['admin']['email']))
+try:
+    expdate = whois_info['expiration_date'][0]
+except KeyError:
+    print "UNKNOWN - No information for %s." % args.domain
+    sys.exit(3)
+
+if expdate < (now + datetime.timedelta(days=args.critical)):
+    print "CRITICAL - %s expires on: %s. Email %s to renew." % (args.domain,expdate,str(whois_info['contacts']['admin']['email']))
     sys.exit(2)
-elif expires < (now + datetime.timedelta(days=warn)):
-    print "WARNING - %s expires on: %s. Email %s to renew." % (domain_name,expdate,str(whois_info['contacts']['admin']['email']))
+elif expdate < (now + datetime.timedelta(days=args.warning)):
+    print "WARNING - %s expires on: %s. Email %s to renew." % (args.domain,expdate,str(whois_info['contacts']['admin']['email']))
     sys.exit(1)
 else:
-    print "OK - %s expires on: %s." % (domain_name,expdate)
+    print "OK - %s expires on: %s." % (args.domain,expdate)
     sys.exit(0)
 
