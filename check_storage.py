@@ -41,7 +41,7 @@ for ds_mor, name in server.get_datastores().items():
     exitflag = 3
     props = VIProperty(server, ds_mor)
     datastorename = name
-    if datastorename == 'VMArchives':
+    if datastorename == 'VMArchives': # Ignores a datastore. This one is always full...
         continue
 #    print "----------------------------------------" 
 #    print "Datastore %s" % datastorename
