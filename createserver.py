@@ -17,7 +17,7 @@ template = "25a5f2e8-f522-4fe0-b0e0-dbaa62405c25"
 
 parser = argparse.ArgumentParser(description='Create new Rackspace Cloud Server')
 parser.add_argument('-n', '--name', type=str, help='Server Name', required=True)
-parser.add_argument('-s', '--size', type=int, default=2, help='Server Size', required=True)
+parser.add_argument('-s', '--size', type=str, default=2, help='Server Size', required=True)
 
 args = parser.parse_args()
 
@@ -41,7 +41,7 @@ rootpassword = server.adminPass
 
 while server.status != "ACTIVE":
     if server.status == "BUILD":
-        time.sleep(60)
+        time.sleep(30)
         server = cs.servers.get(server.id)
         print "Status: %s" % server.status
         print "%d%%" % server.progress
@@ -55,16 +55,15 @@ print "Server looks active..."
 ipaddress = server.accessIPv4
 print "IP Address %s" % ipaddress
 
-time.sleep(60)
+time.sleep(30)
 
 commands = [
 'rpm -ivh http://mirror.rackspace.com/epel/6/x86_64/epel-release-6-8.noarch.rpm',
 'rpm -ivh http://mirror.rackspace.com/ius/stable/CentOS/6/x86_64/ius-release-1.0-11.ius.centos6.noarch.rpm',
 'rpm -ivh http://yum.puppetlabs.com/el/6/products/x86_64/puppetlabs-release-6-7.noarch.rpm',
-'yum -y install vim-enchanced puppet mlocate man file',
+'yum -y install vim-enhanced puppet mlocate man file',
 
 ]
-
 
 try:
     client = paramiko.SSHClient()
