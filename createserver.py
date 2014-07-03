@@ -5,29 +5,27 @@ import os
 import sys
 import argparse
 import time
+# https://pypi.python.org/pypi/pyrax
 import pyrax
-
+# https://pypi.python.org/pypi/paramiko
 import paramiko
-import base64
 
-
-# Hard Code this. Might want to have drop down...
-# CentOS 6.4
-template = "25a5f2e8-f522-4fe0-b0e0-dbaa62405c25"
+# CentOS 6.5
+template = "042395fc-728c-4763-86f9-9b0cacb00701"
 
 parser = argparse.ArgumentParser(description='Create new Rackspace Cloud Server')
 parser.add_argument('-n', '--name', type=str, help='Server Name', required=True)
-parser.add_argument('-s', '--size', type=str, default=2, help='Server Size', required=True)
+parser.add_argument('-s', '--size', type=str, default='performance1-1', help='Server Size', required=True)
 
 args = parser.parse_args()
 
 servername = args.name
 flavor = args.size
 
-
 creds_file = os.path.expanduser("~/.rackspace_cloud_credentials")
 pyrax.settings.set('identity_type', 'rackspace')
-pyrax.settings.set('region', 'DFW')
+# DFW is the default
+# pyrax.settings.set('region', 'DFW')
 pyrax.set_credential_file(creds_file)
 cs = pyrax.cloudservers
 
@@ -41,7 +39,7 @@ rootpassword = server.adminPass
 
 while server.status != "ACTIVE":
     if server.status == "BUILD":
-        time.sleep(30)
+        time.sleep(15)
         server = cs.servers.get(server.id)
         print "Status: %s" % server.status
         print "%d%%" % server.progress
@@ -55,6 +53,7 @@ print "Server looks active..."
 ipaddress = server.accessIPv4
 print "IP Address %s" % ipaddress
 
+# Wait for SSH to start before trying to login
 time.sleep(30)
 
 commands = [
@@ -67,7 +66,6 @@ commands = [
 
 try:
     client = paramiko.SSHClient()
-#    client.load_system_host_keys()
 
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
@@ -78,5 +76,4 @@ try:
 
 finally:
     client.close()
-
 
