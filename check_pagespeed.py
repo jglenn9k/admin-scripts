@@ -8,6 +8,13 @@ import os
 import sys
 import argparse
 
+try:
+    from io import BytesIO
+except ImportError:
+    from StringIO import StringIO as BytesIO
+
+buffer = BytesIO()
+
 parser = argparse.ArgumentParser(description='Check Page Speed')
 parser.add_argument('-u', '--url', type=str, help='Full URL for page to check.', required=True)
 
@@ -15,10 +22,15 @@ args = parser.parse_args()
 
 c = pycurl.Curl()
 
+if os.name == 'nt':
+    c.setopt(c.SSL_VERIFYPEER, False);
+
 c.setopt(c.URL, args.url)
+c.setopt(c.WRITEDATA, buffer)
+
 c.setopt(c.TIMEOUT, 60)
 c.setopt(c.VERBOSE, False)
-c.setopt(c.SSL_VERIFYPEER, True);
+
 c.setopt(c.HEADER, True);
 c.setopt(c.ENCODING, "gzip");
 c.setopt(c.FOLLOWLOCATION, False);
@@ -39,3 +51,4 @@ print('TOTAL_TIME: %f seconds.' % c.getinfo(c.TOTAL_TIME))
 
 # getinfo must be called before close.
 c.close()
+
