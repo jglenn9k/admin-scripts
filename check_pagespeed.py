@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-
+# vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
 # See http://pycurl.io/
 import pycurl
 
@@ -48,6 +48,11 @@ print('APPCONNECT_TIME: %f seconds.' % c.getinfo(c.APPCONNECT_TIME))
 print('PRETRANSFER_TIME: %f seconds.' % c.getinfo(c.PRETRANSFER_TIME))
 print('STARTTRANSFER_TIME: %f seconds.' % c.getinfo(c.STARTTRANSFER_TIME))
 print('TOTAL_TIME: %f seconds.' % c.getinfo(c.TOTAL_TIME))
+
+exitcode = 'OK'
+
+
+print('%s | dns=%fs;;;0.000 connect=%fs;;;0.000 appconnect=%fs;;;0.000 pretransfer=%fs;;;0.000 start=%fs;;;0.000 total=%fs;;;0.000' % (exitcode, c.NAMELOOKUP_TIME, c.CONNECT_TIME, c.APPCONNECT_TIME, c.PRETRANSFER_TIME, c.STARTTRANSFER_TIME, c.TOTAL_TIME))
 
 # getinfo must be called before close.
 c.close()
