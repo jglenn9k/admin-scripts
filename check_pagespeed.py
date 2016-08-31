@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
+
 # See http://pycurl.io/
 import pycurl
 
@@ -17,6 +17,9 @@ buffer = BytesIO()
 
 parser = argparse.ArgumentParser(description='Check Page Speed')
 parser.add_argument('-u', '--url', type=str, help='Full URL for page to check.', required=True)
+parser.add_argument('-w', '--warn', type=str, help='Total time to result in warning status in seconds.', required=True)
+parser.add_argument('-c', '--crit', type=str, help='Total time to result in critical status in seconds.', required=True)
+
 
 args = parser.parse_args()
 
@@ -42,17 +45,17 @@ print('RESPONSE_CODE: %d' % c.getinfo(c.RESPONSE_CODE))
 print('SIZE_DOWNLOAD: %d bytes.' % c.getinfo(c.SIZE_DOWNLOAD))
 print('SPEED_DOWNLOAD: %d bytes/second.' % c.getinfo(c.SPEED_DOWNLOAD))
 
-print('NAMELOOKUP_TIME: %f seconds.' % c.getinfo(c.NAMELOOKUP_TIME))
-print('CONNECT_TIME: %f seconds.' % c.getinfo(c.CONNECT_TIME))
-print('APPCONNECT_TIME: %f seconds.' % c.getinfo(c.APPCONNECT_TIME))
-print('PRETRANSFER_TIME: %f seconds.' % c.getinfo(c.PRETRANSFER_TIME))
-print('STARTTRANSFER_TIME: %f seconds.' % c.getinfo(c.STARTTRANSFER_TIME))
-print('TOTAL_TIME: %f seconds.' % c.getinfo(c.TOTAL_TIME))
+if c.getinfo(c.TOTAL_TIME) > args.warn:
+    exittext = 'WARNING'
+    exitcode = 1
+elif c.getinfo(c.TOTAL_TIME) > args.crit:
+    exittext = 'CRITICAL'
+    exitcode = 2
+else:
+    exittext = 'OK'
+    exitcode = 0
 
-exitcode = 'OK'
-
-
-print('%s | dns=%fs;;;0.000 connect=%fs;;;0.000 appconnect=%fs;;;0.000 pretransfer=%fs;;;0.000 start=%fs;;;0.000 total=%fs;;;0.000' % (exitcode, c.NAMELOOKUP_TIME, c.CONNECT_TIME, c.APPCONNECT_TIME, c.PRETRANSFER_TIME, c.STARTTRANSFER_TIME, c.TOTAL_TIME))
+print('%s | dns=%fs;;;0.000 connect=%fs;;;0.000 appconnect=%fs;;;0.000 pretransfer=%fs;;;0.000 start=%fs;;;0.000 total=%fs;;;0.000' % (exittext, c.getinfo(c.NAMELOOKUP_TIME), c.getinfo(c.CONNECT_TIME), c.getinfo(c.APPCONNECT_TIME), c.getinfo(c.PRETRANSFER_TIME), c.getinfo(c.STARTTRANSFER_TIME), c.getinfo(c.TOTAL_TIME)))
 
 # getinfo must be called before close.
 c.close()
