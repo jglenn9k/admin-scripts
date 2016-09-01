@@ -13,6 +13,7 @@ try:
 except ImportError:
     from StringIO import StringIO as BytesIO
 
+# Use a buffer just to discard it.
 buffer = BytesIO()
 
 parser = argparse.ArgumentParser(description='Check Page Speed')
@@ -25,18 +26,20 @@ args = parser.parse_args()
 
 c = pycurl.Curl()
 
+# Junk to allow testing on Windows. Don't use this on Windows.
 if os.name == 'nt':
     c.setopt(c.SSL_VERIFYPEER, False);
 
 c.setopt(c.URL, args.url)
+# 
 c.setopt(c.WRITEFUNCTION, buffer.write)
-
 c.setopt(c.TIMEOUT, args.timeout)
 c.setopt(c.VERBOSE, False)
 c.setopt(c.HEADER, True);
 c.setopt(c.ENCODING, "gzip");
-c.setopt(c.FOLLOWLOCATION, False);
 c.setopt(c.USERAGENT, "Page Speed Checker v1.0");
+# TODO: Make this optional.
+c.setopt(c.FOLLOWLOCATION, False);
 
 try:
     c.perform()
