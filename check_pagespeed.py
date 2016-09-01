@@ -56,10 +56,7 @@ if exitcode == 0:
     else:
         exittext = 'OK'
         exitcode = 0
-print('RESPONSE_CODE: %d' % c.getinfo(c.RESPONSE_CODE))
-print('SIZE_DOWNLOAD: %d bytes.' % c.getinfo(c.SIZE_DOWNLOAD))
-print('SPEED_DOWNLOAD: %d bytes/second.' % c.getinfo(c.SPEED_DOWNLOAD))
-print('%s | dns=%fs;;;0.000 connect=%fs;;;0.000 appconnect=%fs;;;0.000 pretransfer=%fs;;;0.000 start=%fs;;;0.000 total=%fs;%f;%f;0.000' % (exittext, c.getinfo(c.NAMELOOKUP_TIME), c.getinfo(c.CONNECT_TIME), c.getinfo(c.APPCONNECT_TIME), c.getinfo(c.PRETRANSFER_TIME), c.getinfo(c.STARTTRANSFER_TIME), c.getinfo(c.TOTAL_TIME), args.warn, args.crit))
+print('%s - Response Code: %d - Page Size: %d bytes - Speed: %d bytes/second | dns=%fs;;;0.000 connect=%fs;;;0.000 appconnect=%fs;;;0.000 pretransfer=%fs;;;0.000 start=%fs;;;0.000 total=%fs;%f;%f;0.000' % (exittext, c.getinfo(c.RESPONSE_CODE), c.getinfo(c.SIZE_DOWNLOAD), c.getinfo(c.SPEED_DOWNLOAD), c.getinfo(c.NAMELOOKUP_TIME), c.getinfo(c.CONNECT_TIME), c.getinfo(c.APPCONNECT_TIME), c.getinfo(c.PRETRANSFER_TIME), c.getinfo(c.STARTTRANSFER_TIME), c.getinfo(c.TOTAL_TIME), args.warn, args.crit))
 
 c.close()
 sys.exit(exitcode)
